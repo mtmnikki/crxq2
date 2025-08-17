@@ -4,7 +4,7 @@
  * Removes AirtableConfigBanner per request; runtime config is no longer supported.
  */
 
-import { HashRouter, Route, Routes } from 'react-router'
+import { ReactRouter, Route, Routes } from 'react-router'
 import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
 import DashboardPage from './pages/Dashboard'
@@ -21,7 +21,7 @@ import { AuthProvider } from './components/auth/AuthContext'
  */
 export default function App() {
   return (
-    <HashRouter>
+    <ReactRouter>
       <AuthProvider>
         {/* Runtime Airtable config UI removed by request */}
 
@@ -81,6 +81,6 @@ export default function App() {
           <Route path="* " element={<HomePage />} />
         </Routes>
       </AuthProvider>
-    </HashRouter>
+    </ReactRouter>
   )
 }
