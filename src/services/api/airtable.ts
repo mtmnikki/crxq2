@@ -251,7 +251,6 @@ export class AirtableService {
     const r = matches[0]
     const f = r.fields
     const tempPass = String(f[this.fields.members.tempPassword] || '')
-    const storedHash = String(f[this.fields.members.passwordHash] || '')
 
     if (tempPass && password === tempPass) {
       const member: MemberAccount = {
@@ -263,14 +262,6 @@ export class AirtableService {
       }
       return member
     }
-
-    if (storedHash) {
-      // Requires server to verify securely
-      throw new ApiError('Password hash present; server-side verification required.', 400, 'SERVER_AUTH_REQUIRED')
-    }
-
-    throw new ApiError('Invalid email or password', 401, 'INVALID_CREDENTIALS')
-  }
 
   /**
    * Fetch clinical programs.
