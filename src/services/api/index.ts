@@ -206,9 +206,8 @@ export const Api = {
 
   // Auth
   async login(payload: LoginPayload) {
-    if (USE_MOCK) return mockLogin(payload)
     if (isAirtableConfigured()) return realLogin(payload)
-    return mockLogin(payload)
+    if (USE_MOCK) return mockLogin(payload) // Fallback to mock if not configured and in mock mode
   },
   async logout() {
     if (USE_MOCK) return mockLogout()
@@ -228,33 +227,35 @@ export const Api = {
 
   // Programs
   async getPrograms() {
-    if (USE_MOCK) return mockGetPrograms()
     if (isAirtableConfigured()) return atGetPrograms()
-    return mockGetPrograms()
+    if (USE_MOCK) return mockGetPrograms() // Fallback to mock if not configured and in mock mode
   },
 
   // Dashboard quick access (mock-only for now)
+  // TODO: Implement Airtable integration for Quick Access
   async getQuickAccess() {
     if (USE_MOCK) return mockGetQuickAccess()
     return mockGetQuickAccess()
   },
 
   async getBookmarkedResources() {
-    if (USE_MOCK) return mockGetBookmarkedResources()
+    // Airtable integration fetches all resources and filters locally
     const set = getBookmarkSet()
     if (isAirtableConfigured()) {
       const list = await atGetResources({})
       return list.map((r) => ({ ...r, bookmarked: set.has(r.id) || !!r.bookmarked })).filter((r) => r.bookmarked)
     }
-    return mockGetBookmarkedResources()
+    if (USE_MOCK) return mockGetBookmarkedResources() // Fallback to mock if not configured and in mock mode
   },
 
   async getRecentActivity() {
+    // TODO: Implement Airtable integration for Recent Activity
     if (USE_MOCK) return mockGetRecentActivity()
     return mockGetRecentActivity()
   },
 
   async getAnnouncements() {
+    // TODO: Implement Airtable integration for Announcements
     if (USE_MOCK) return mockGetAnnouncements()
     return mockGetAnnouncements()
   },
@@ -270,7 +271,7 @@ export const Api = {
     return should
   },
 
-  // Program-specific (Documentation Forms for tab)
+  // Program-specific (Documentation Forms for tab) - uses Airtable
   async getProgramResources(slug: ProgramSlug) {
     if (USE_MOCK) return mockGetProgramResources(slug)
     if (isAirtableConfigured()) return atGetProgramDocumentationForms(slug)
